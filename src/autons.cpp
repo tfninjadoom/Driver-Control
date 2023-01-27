@@ -237,7 +237,7 @@ void autonselfawpleft() {
 }
 */
 
-void autonskills(){
+void skillsauton(){
   autonflywheel(flywheel_start);
   chassis.set_drive_pid(-5, DRIVE_SPEED, true);
   autonroller();
