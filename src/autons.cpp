@@ -49,7 +49,7 @@ void modified_exit_condition() {
 
 void autonflywheel(int rpm) {
   //rpm = rpm/6;
-  flywheel.move_velocity(rpm);
+  flywheel.set_velocity_custom_controller(rpm);
 };
 
 void intakeon() {

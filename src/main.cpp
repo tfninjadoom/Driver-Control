@@ -1,6 +1,7 @@
 #include "main.h"
 #include "pros/misc.h"
 #include "globals.hpp"
+#include "autons.hpp"
 
 
 /////
@@ -54,6 +55,8 @@ Drive chassis (
 
 
 
+
+
 /**
  * Runs initialization code. This occurs as soon as the program is started.
  *
@@ -81,12 +84,13 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
-    Auton ("", autonright)
+    Auton("", autonright)
   });
 
   // Initialize chassis and auton selector
   chassis.initialize();
   ez::as::initialize();
+  sylib::initialize();
 }
 
 
@@ -164,6 +168,7 @@ void opcontrol() {
   int intake_mode = 0; // Sets up intake control for buttons
   int flywheel_mode = 0; //Sets up flywheel control for buttons
   
+
   while (true) {
     
     
@@ -199,39 +204,39 @@ void opcontrol() {
     }
 
     // Flywheel
-    if ( (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) || (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)) ) { // When L1 or L2 pressed,
+    if ( (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))) { // When L1 pressed,
       if (flywheel_mode != 4) { // If flywheel not running at speed 4,
-        flywheel.move_velocity(300); // Run Flywheel Sp4
+        flywheel.set_velocity_custom_controller(110) ; // Run Flywheel Sp4
         flywheel_mode = 4;
       } else { // If flywheel already running, 
-        flywheel.move_velocity(0); // Turn off flywheel motor
+        flywheel.set_velocity_custom_controller(110) ; // Turn off flywheel motor
         flywheel_mode = 0;
       }
     }
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){ // When A pressed,
       if (flywheel_mode != 1) { // If flywheel not running at speed 1,
-        flywheel.move_velocity(140); // Run Flywheel Sp1
+        flywheel.set_velocity_custom_controller(110) ; // Run Flywheel Sp1
         flywheel_mode = 1;
       } else { // If flywheel already running, 
-        flywheel.move_velocity(0); // Turn off flywheel motor
+        flywheel.set_velocity_custom_controller(110) ; // Turn off flywheel motor
         flywheel_mode = 0;
       }
     }
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){ // When B pressed,
       if (flywheel_mode != 2) { // If flywheel not running at speed 2,
-        flywheel.move_velocity(160); // Run Flywheel Sp2
+        flywheel.set_velocity_custom_controller(110) ; // Run Flywheel Sp2
         flywheel_mode = 2;
       } else { // If flywheel already running, 
-        flywheel.move_velocity(0); // Turn off flywheel motor
+        flywheel.set_velocity_custom_controller(110) ; // Turn off flywheel motor
         flywheel_mode = 0;
       }
     }
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){ // When X pressed,
       if (flywheel_mode != 3) { // If flywheel not running at speed 3,
-        flywheel.move_velocity(110); // Run Flywheel Sp3
+        flywheel.set_velocity_custom_controller(110) ; // Run Flywheel Sp3
         flywheel_mode = 3;
       } else { // If flywheel already running, 
-        flywheel.move_velocity(0); // Turn off flywheel motor
+        flywheel.set_velocity_custom_controller(0) ; // Turn off flywheel motor
         flywheel_mode = 0;
       }
     }
