@@ -70,6 +70,7 @@ void initialize() {
   pros::delay(500); // Stop the user from doing anything while legacy ports configure.
 
   expansion1.set_value(false);
+  compressor.set_value(false);
 
   // Configure your chassis controls
   chassis.toggle_modify_curve_with_controller(false); // Enables modifying the controller curve with buttons on the joysticks
@@ -103,6 +104,7 @@ void initialize() {
  */
 void disabled() {
   expansion1.set_value(true);
+  compressor.set_value(false);
 }
 
 
@@ -117,6 +119,7 @@ void disabled() {
  */
 void competition_initialize() {
   expansion1.set_value(false);
+  compressor.set_value(false);
 }
 
 
@@ -134,6 +137,7 @@ void competition_initialize() {
  */
 void autonomous() {
   expansion1.set_value(false);
+  compressor.set_value(false);
 
   chassis.reset_pid_targets(); // Resets PID targets to 0
   chassis.reset_gyro(); // Reset gyro position to 0
@@ -204,7 +208,7 @@ void opcontrol() {
     }
 
     // Flywheel
-    if ( (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1))) { // When L1 pressed,
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) { // When L1 pressed,
       if (flywheel_mode != 4) { // If flywheel not running at speed 4,
         flywheel.set_velocity_custom_controller(110) ; // Run Flywheel Sp4
         flywheel_mode = 4;
@@ -241,8 +245,14 @@ void opcontrol() {
       }
     }
 
+    // Expansion
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_Y)){ // When Y pressed, 
       expansion1.set_value(true);
+    }
+
+    // Compressor
+    if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){ // When L2 pressed, 
+      compressor.set_value(!(compressor.get_value()));
     }
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME

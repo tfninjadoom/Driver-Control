@@ -72,7 +72,8 @@ class ADIPort {
 	 * \return The ADI configuration for the given port
 	 */
 	std::int32_t get_config() const;
-
+	
+	
 	/**
 	 * Gets the value for the given ADI port.
 	 *
@@ -328,6 +329,7 @@ class ADIDigitalOut : private ADIPort {
 	 * \return if the operation was successful or PROS_ERR if the operation failed, setting errno.
 	 */
 	using ADIPort::set_value;
+	using ADIPort::get_value;
 };
 
 class ADIDigitalIn : private ADIPort {

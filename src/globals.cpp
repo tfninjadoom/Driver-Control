@@ -14,6 +14,8 @@ pros::Motor driverightback(14, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_EN
 
 //SOLENOID
 pros::ADIDigitalOut expansion1('A', false);
+pros::ADIDigitalOut compressor('B', false);
+
 
 //CONTROLLER
 pros::Controller controller(pros::E_CONTROLLER_MASTER);

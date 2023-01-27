@@ -22,6 +22,7 @@ void intakeon();
 void intakeoff();
 void autonroller();
 void autonindex();
+void fcompressor();
 
 void autonright();
 void autonleft();
