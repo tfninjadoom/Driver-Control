@@ -1,4 +1,5 @@
 #include "main.h"
+#include "pros/misc.h"
 #include "globals.hpp"
 
 
@@ -13,7 +14,13 @@
 int tune_turn;
 // It's best practice to tune constants when the robot is empty and with heavier game objects, or with lifts up vs down.
 // If the objects are light or the cog doesn't change much, then there isn't a concern here.
-
+int currentSpeed;
+int targetSpeed = 127;
+int error;
+float Kp = 0.5;
+float Ki = 0.1;
+float Kd = 0.1;
+double targetSpeed;
 void default_constants() {
   chassis.set_slew_min_power(80, 80);
   chassis.set_slew_distance(7, 7);
@@ -49,7 +56,21 @@ void modified_exit_condition() {
 
 void autonflywheel(int rpm) {
   //rpm = rpm/6;
-  flywheel.move_velocity(rpm);
+  flywheel.set_velocity(rpm);
+  currentSpeed = flywheel.get_velocity();
+  targetSpeed = currentSpeed/2;
+  while(true){
+    currentSpeed = flywheel.get_velocity();
+    error = targetSpeed- currentSpeed;
+    float P = error * Kp;
+    float I = error * Ki;
+    float D = error * Kd;
+    int output = P+I+D;
+    flywheel.set_velocity(output);
+    pros::delay(20);
+  }
+
+
 };
 
 void intakeon() {
@@ -66,7 +87,7 @@ void autonroller() {
   intake.move_velocity(0);
 };
 
-void autonindex(int disks) {
+void autonindex() {
   bool var = true;
   while (var == true) {
     intake.move_velocity(-180);
@@ -82,7 +103,7 @@ const int DRIVE_SPEED = 110; // This is 110/127 (around 87% of max speed).  We d
 const int TURN_SPEED  = 90;
 const int SWING_SPEED = 90;
 
-int flywheel_start = 460;
+int flywheel_start = 3600;
 int R1 = 10;
 int R2 = 20;
 

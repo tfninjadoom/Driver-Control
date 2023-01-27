@@ -1,11 +1,10 @@
-
 /**
  * \file main.h
  *
  * Contains common definitions and header files used throughout your PROS
  * project.
  *
- * Copyright (c) 2017-2021, Purdue University ACM SIGBots.
+ * Copyright (c) 2017-2022, Purdue University ACM SIGBots.
  * All rights reserved.
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
@@ -35,6 +34,10 @@
  */
 #define PROS_USE_LITERALS
 
+#include "./EZ-Template/api.hpp"
+#include "globals.hpp"
+#include "./autons.hpp"
+#include "./sylib/sylib.hpp"
 #include "api.h"
 
 /**
@@ -42,12 +45,6 @@
  */
 //#include "okapi/api.hpp"
 //#include "pros/api_legacy.h"
-#include "EZ-Template/api.hpp"
-#include "autons.hpp"
-
-// More includes here...
-//
-// . . .
 
 /**
  * If you find doing pros::Motor() to be tedious and you'd prefer just to do
@@ -81,7 +78,6 @@ void opcontrol(void);
 #ifdef __cplusplus
 /**
  * You can add C++-only headers here
- 
  */
 //#include <iostream>
 #endif

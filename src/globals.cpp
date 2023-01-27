@@ -12,7 +12,7 @@ pros::Motor leftmid(5, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_COU
 pros::Motor rightmid(8, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_COUNTS);
 pros::Motor driveleftback(17, pros::E_MOTOR_GEARSET_06, true, pros::E_MOTOR_ENCODER_COUNTS);
 pros::Motor driverightback(14, pros::E_MOTOR_GEARSET_06, false, pros::E_MOTOR_ENCODER_COUNTS);
-
+sylib::Motor flywheel(19, 3600, false);
 //SOLENOID
 pros::ADIDigitalOut expansion1('A', false);
 
