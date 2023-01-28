@@ -18,7 +18,6 @@ int error;
 float Kp = 0.5;
 float Ki = 0.1;
 float Kd = 0.1;
-double targetSpeed;
 //FLYWHEEL CONSTANTS--------------------------------------
 
 
@@ -66,7 +65,7 @@ void initialize() {
   ez::as::auton_selector.add_autons({
     Auton ("", autonright),
     Auton("", autonleft),
-    Auton("", autonskills),
+    Auton("", skillsauton),
   });
 
   // Initialize chassis and auton selector

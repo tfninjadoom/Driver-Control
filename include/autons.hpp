@@ -26,4 +26,4 @@ void fcompressor();
 
 void autonright();
 void autonleft();
-void autonselfawpleft();
+void skillsauton();

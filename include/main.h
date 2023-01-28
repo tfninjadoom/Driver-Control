@@ -35,7 +35,6 @@
 #define PROS_USE_LITERALS
 
 #include "./EZ-Template/api.hpp"
-#include "globals.hpp"
 #include "./autons.hpp"
 #include "./sylib/sylib.hpp"
 #include "api.h"

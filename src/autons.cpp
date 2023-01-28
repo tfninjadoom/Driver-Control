@@ -20,7 +20,6 @@ int error;
 float Kp = 0.5;
 float Ki = 0.1;
 float Kd = 0.1;
-double targetSpeed;
 void default_constants() {
   chassis.set_slew_min_power(80, 80);
   chassis.set_slew_distance(7, 7);
@@ -72,7 +71,7 @@ void autonflywheel(int rpm) {
     flywheel.set_velocity(output);
     pros::delay(20); 
   */
-  }
+
 
 
 };
