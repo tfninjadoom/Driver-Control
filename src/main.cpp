@@ -179,7 +179,7 @@ void opcontrol() {
     // Flywheel
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) { // When L1 pressed,
       if (flywheel_mode != 4) { // If flywheel not running at speed 4,
-        targetSpeed = 3600; // Run Flywheel Sp4
+        targetSpeed = -3600; // Run Flywheel Sp4
         flywheel_mode = 4;
       } else { // If flywheel already running, 
         targetSpeed = 0; // Turn off flywheel motor
@@ -221,7 +221,7 @@ void opcontrol() {
 
     // Compressor
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){ // When L2 pressed, 
-      compressor.set_value(!(compressor.get_value()));
+      compressor.set_value(true);
     }
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME

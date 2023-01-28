@@ -14,12 +14,9 @@
 int tune_turn;
 // It's best practice to tune constants when the robot is empty and with heavier game objects, or with lifts up vs down.
 // If the objects are light or the cog doesn't change much, then there isn't a concern here.
-int currentSpeed;
-int targetSpeed = 127;
-int error;
-float Kp = 0.5;
-float Ki = 0.1;
-float Kd = 0.1;
+
+
+
 void default_constants() {
   chassis.set_slew_min_power(80, 80);
   chassis.set_slew_distance(7, 7);
