@@ -1,7 +1,9 @@
 #include "main.h"
 #include "pros/misc.h"
 #include "globals.hpp"
+#include "main.cpp"
 
+//
 
 /////
 // For instalattion, upgrading, documentations and tutorials, check out website!
@@ -107,7 +109,8 @@ const int DRIVE_SPEED = 110; // This is 110/127 (around 87% of max speed).  We d
 const int TURN_SPEED  = 90;
 const int SWING_SPEED = 90;
 
-int flywheel_start = 3600;
+int flywheel_start = 600;
+/*
 int R1 = 10;
 int R2 = 20;
 
@@ -118,6 +121,7 @@ int AWP1 = 20;
 
 int SK1 = 20;
 int SK2 = 20;
+*/
 
 void autonright() {
   
@@ -151,7 +155,7 @@ void autonleft() {
   autonflywheel(flywheel_start);
   chassis.set_drive_pid(-3, DRIVE_SPEED, true);
   autonroller();
-  chassis.set_drive_pid(5, DRIVE_SPEED, true);      // Move forward 5 inches
+  chassis.set_drive_pid(10, DRIVE_SPEED, true);      // Move forward 5 inches
   chassis.wait_drive(); /*
   chassis.set_turn_pid(-L1, TURN_SPEED);            // Turn R1 degrees counterclockwise
   chassis.wait_drive();

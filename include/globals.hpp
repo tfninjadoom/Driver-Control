@@ -1,5 +1,7 @@
 #include "main.h"
 
+extern sylib::TakeBackHalfController tbh;
+
 //MOTORS
 extern pros::Motor intake;
 extern sylib::Motor flywheel;

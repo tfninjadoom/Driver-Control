@@ -3,36 +3,79 @@
 #include "globals.hpp"
 #include "autons.hpp"
 
-
 /////
 // For instalattion, upgrading, documentations and tutorials, check out website!
 // https://ez-robotics.github.io/EZ-Template/
 /////
 
 
-
-//FLYWHEEL CONSTANTS-------------------------------------
-int currentSpeed;
-int targetSpeed = 127;
-int error;
-float Kp = 0.5;
-float Ki = 0.1;
-float Kd = 0.1;
-//FLYWHEEL CONSTANTS--------------------------------------
-
-
-
-
-
-
 // Chassis constructor
 Drive chassis (
-  
   {-3, -5, -17} ,{16, 8, 14}, 21, 4.125, 600, 2.333
-
 );
 
 
+// Sets up intake control for buttons
+int intake_mode = 0;
+// Sets up flywheel control for buttons
+int flywheel_mode = 0;
+
+
+// Flywheel Constants
+int target_velocity = 127;
+int error;
+float fP = 0;
+float fI = 0;
+float fD = 0;
+#define gain 0.00025
+
+
+/** @brief      Calculate the current flywheel motor velocity */
+
+
+int MotorVelocity() {
+    // Calculate velocity in rpm
+    return flywheel.get_velocity();
+}
+
+
+/** @brief      Update the velocity tbh controller variables  */
+
+void FwControlUpdateVelocityTbh(int target_velocity) {
+    // calculate error in velocity
+    // target_velocity is desired velocity
+    // current is measured velocity
+    int current_error = target_velocity - MotorVelocity();
+
+    // Calculate new control value
+    int drive =  drive + (current_error * gain);
+
+    // Clip to the range 0 - 1.
+    // We are only going forwards
+    if( drive > 1 )
+          drive = 1;
+    if( drive < 0 )
+          drive = 0;
+/*
+    // Check for zero crossing
+    if( sgn(current_error) != sgn(last_error) ) {
+        // First zero crossing after a new set velocity command
+        if( first_cross ) {
+            // Set drive to the open loop approximation
+            drive = drive_approx;
+            first_cross = 0;
+        }
+        else
+            drive = 0.5 * ( drive + drive_at_zero );
+
+        // Save this drive value in the "tbh" variable
+        drive_at_zero = drive;
+    }
+
+    // Save last error
+    last_error = current_error;
+*/
+}
 
 
 /**
@@ -63,9 +106,9 @@ void initialize() {
 
   // Autonomous Selector using LLEMU
   ez::as::auton_selector.add_autons({
-    Auton ("", autonright),
-    Auton("", autonleft),
-    Auton("", skillsauton),
+    //Auton ("Right Auton", autonright),
+    Auton("Left Auton", autonleft),
+    Auton("Skills Auton", skillsauton),
   });
 
   // Initialize chassis and auton selector
@@ -76,12 +119,9 @@ void initialize() {
 
 
 
-
 void disabled() {
-  expansion1.set_value(true);
   compressor.set_value(false);
 }
-
 
 
 void competition_initialize() {
@@ -89,8 +129,7 @@ void competition_initialize() {
   compressor.set_value(false);
 }
 
-
-
+  
 
 void autonomous() {
   expansion1.set_value(false);
@@ -107,55 +146,8 @@ void autonomous() {
 }
 
 
-/**
- * Runs the operator control code. This function will be started in its own task
- * with the default priority and stack size whenever the robot is enabled via
- * the Field Management System or the VEX Competition Switch in the operator
- * control mode.
- *
- * If no competition control is connected, this function will run immediately
- * following initialize().
- *
- * If the robot is disabled or communications is lost, the
- * operator control task will be stopped. Re-enabling the robot will restart the
- * task, not resume it from where it left off.
- */
-
-void opcontrol() {
-  // This is preference to what you like to drive on.
-  expansion1.set_value(false);
-  chassis.set_drive_brake(MOTOR_BRAKE_COAST);
-  flywheel.set_velocity(3600);
-  currentSpeed = flywheel.get_velocity();
-  targetSpeed = currentSpeed/2;
-
-  
-  int intake_mode = 0; // Sets up intake control for buttons
-  int flywheel_mode = 0; //Sets up flywheel control for buttons
-  
-
-  while (true) {
-    
-    
-
-    chassis.tank(); // Tank control
-    // chassis.arcade_standard(ez::SPLIT); // Standard split arcade
-    // chassis.arcade_standard(ez::SINGLE); // Standard single arcade
-    // chassis.arcade_flipped(ez::SPLIT); // Flipped split arcade
-    // chassis.arcade_flipped(ez::SINGLE); // Flipped single arcade
-
-    // . . .
-    // Put more user control code here!
-    // . . .
-    currentSpeed = flywheel.get_velocity();
-    error = targetSpeed- currentSpeed;
-    float P = error * Kp;
-    float I = error * Ki;
-    float D = error * Kd;
-    int output = P+I+D;
-    flywheel.set_velocity(output+currentSpeed);
-    pros::delay(20);
-
+void checkbuttons() {
+  // Intake
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_R1)) { // When R1 pressed,
       if (intake_mode == 0){ // If intake not running,
         intake.move_velocity(170); // Run Intake
@@ -179,37 +171,37 @@ void opcontrol() {
     // Flywheel
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L1)) { // When L1 pressed,
       if (flywheel_mode != 4) { // If flywheel not running at speed 4,
-        targetSpeed = -3600; // Run Flywheel Sp4
+        flywheel.set_velocity(500); // = -3600; // Run Flywheel Sp4
         flywheel_mode = 4;
       } else { // If flywheel already running, 
-        targetSpeed = 0; // Turn off flywheel motor
+        flywheel.set_velocity(500); // = 0; // Turn off flywheel motor
         flywheel_mode = 0;
       }
     }
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A)){ // When A pressed,
       if (flywheel_mode != 1) { // If flywheel not running at speed 1,
-        targetSpeed = 3000; // Run Flywheel Sp1
+        flywheel.set_velocity(500); // = 3000; // Run Flywheel Sp1
         flywheel_mode = 1;
       } else { // If flywheel already running, 
-        targetSpeed = 0; // Turn off flywheel motor
+        flywheel.set_velocity(500); // = 0; // Turn off flywheel motor
         flywheel_mode = 0;
       }
     }
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_B)){ // When B pressed,
       if (flywheel_mode != 2) { // If flywheel not running at speed 2,
-        targetSpeed = 2500; // Run Flywheel Sp2
+        flywheel.set_velocity(500); // = 2500; // Run Flywheel Sp2
         flywheel_mode = 2;
       } else { // If flywheel already running, 
-        targetSpeed = 0; // Turn off flywheel motor
+        flywheel.set_velocity(500); // = 0; // Turn off flywheel motor
         flywheel_mode = 0;
       }
     }
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_X)){ // When X pressed,
       if (flywheel_mode != 3) { // If flywheel not running at speed 3,
-        targetSpeed = 2000; // Run Flywheel Sp3
+        flywheel.set_velocity(500); // = 2000; // Run Flywheel Sp3
         flywheel_mode = 3;
       } else { // If flywheel already running, 
-        targetSpeed = 0; // Turn off flywheel motor
+        flywheel.set_velocity(500); // = 0; // Turn off flywheel motor
         flywheel_mode = 0;
       }
     }
@@ -221,10 +213,65 @@ void opcontrol() {
 
     // Compressor
     if (master.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_L2)){ // When L2 pressed, 
-      compressor.set_value(true);
+      compressor.set_value(!(compressor.get_value()));
     }
 
     pros::delay(ez::util::DELAY_TIME); // This is used for timer calculations!  Keep this ez::util::DELAY_TIME
-  }
 }
 
+
+
+/**
+ * Runs the operator control code. This function will be started in its own task
+ * with the default priority and stack size whenever the robot is enabled via
+ * the Field Management System or the VEX Competition Switch in the operator
+ * control mode.
+ *
+ * If no competition control is connected, this function will run immediately
+ * following initialize().
+ *
+ * If the robot is disabled or communications is lost, the
+ * operator control task will be stopped. Re-enabling the robot will restart the
+ * task, not resume it from where it left off.
+ **/
+void opcontrol() {
+  expansion1.set_value(false);
+
+  autonleft();
+
+  // This is preference to what you like to drive on.
+  chassis.set_drive_brake(MOTOR_BRAKE_COAST);
+  flywheel.set_velocity(600);
+  
+
+  while (true) {
+    
+    
+
+    chassis.tank(); // Tank control
+    // chassis.arcade_standard(ez::SPLIT); // Standard split arcade
+    // chassis.arcade_standard(ez::SINGLE); // Standard single arcade
+    // chassis.arcade_flipped(ez::SPLIT); // Flipped split arcade
+    // chassis.arcade_flipped(ez::SINGLE); // Flipped single arcade
+
+    // . . .
+    // Put more user control code here!
+    // . . .
+    
+    // Old Flywheel Controller
+    /*
+    currentSpeed = flywheel.get_velocity();
+    targetSpeed = currentSpeed/2;
+    error = targetSpeed - currentSpeed;
+    float P = error * fP;
+    float I = error * fI;
+    float D = error * fD;
+    int output = P+I+D;
+    flywheel.set_velocity(output+currentSpeed);
+    pros::delay(20);
+    */
+
+
+    checkbuttons();
+  }
+}

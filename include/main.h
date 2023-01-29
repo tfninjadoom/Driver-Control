@@ -41,6 +41,7 @@
 #include "sylib/sylib.hpp"
 #include "./autons.hpp"
 #include "EZ-Template/api.hpp"
+#include "sylib/motor.hpp"
 
 /**
  * You should add more #includes here
